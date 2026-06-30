@@ -1,16 +1,18 @@
 import { User, Invoice, InvoiceItem } from './types';
 
+const API_BASE = import.meta.env.VITE_API_URL || '';
+
 // API Client for the frontend
 export const db = {
   getUser: async (walletAddress: string): Promise<User | null> => {
-    const res = await fetch(`/api/users/${walletAddress}`);
+    const res = await fetch(`${API_BASE}/api/users/${walletAddress}`);
     if (res.status === 404) return null;
     if (!res.ok) throw new Error('Failed to fetch user');
     return res.json();
   },
   
   createUser: async (walletAddress: string, businessName?: string, email?: string): Promise<User> => {
-    const res = await fetch(`/api/users`, {
+    const res = await fetch(`${API_BASE}/api/users`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ wallet_address: walletAddress, business_name: businessName, email })
@@ -20,7 +22,7 @@ export const db = {
   },
 
   updateUser: async (id: string, updates: Partial<User>): Promise<User> => {
-    const res = await fetch(`/api/users/${id}`, {
+    const res = await fetch(`${API_BASE}/api/users/${id}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(updates)
@@ -30,20 +32,20 @@ export const db = {
   },
 
   getInvoices: async (userId: string): Promise<Invoice[]> => {
-    const res = await fetch(`/api/invoices?userId=${userId}`);
+    const res = await fetch(`${API_BASE}/api/invoices?userId=${userId}`);
     if (!res.ok) throw new Error('Failed to fetch invoices');
     return res.json();
   },
 
   getInvoice: async (id: string): Promise<Invoice | null> => {
-    const res = await fetch(`/api/invoices/${id}`);
+    const res = await fetch(`${API_BASE}/api/invoices/${id}`);
     if (res.status === 404) return null;
     if (!res.ok) throw new Error('Failed to fetch invoice');
     return res.json();
   },
 
   createInvoice: async (invoice: Partial<Invoice>, items: Partial<InvoiceItem>[]): Promise<Invoice> => {
-    const res = await fetch(`/api/invoices`, {
+    const res = await fetch(`${API_BASE}/api/invoices`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ invoice, items })
@@ -53,7 +55,7 @@ export const db = {
   },
 
   updateInvoiceStatus: async (id: string, status: Invoice['status'], txHash?: string): Promise<Invoice> => {
-    const res = await fetch(`/api/invoices/${id}/status`, {
+    const res = await fetch(`${API_BASE}/api/invoices/${id}/status`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ status, transaction_hash: txHash })
