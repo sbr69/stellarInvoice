@@ -17,7 +17,6 @@ Designed as a modern SaaS application, InvoiceChain combines a clean and respons
 | Resource | Link |
 |----------|------|
 | 🌐 **Live Demo** | [stellar-invoice-ecru.vercel.app](https://stellar-invoice-ecru.vercel.app) |
-| 🎬 **Demo Video (1–2 min)** | `<your-video-link>` <!-- Replace with YouTube/Loom link --> |
 | 📜 **Contract Address** | [`CCUHMHOIOOOGFJBVOKGMTE424QTDY6B2EX6HO2X5D52IDPL2X4UQZIBM`](https://stellar.expert/explorer/testnet/contract/CCUHMHOIOOOGFJBVOKGMTE424QTDY6B2EX6HO2X5D52IDPL2X4UQZIBM) |
 | 🔗 **Contract Interaction Tx Hash** | [`19f31c163881415628499a284fc7f9846e942253592e0a8c8d6f37f4493be888`](https://stellar.expert/explorer/testnet/tx/19f31c163881415628499a284fc7f9846e942253592e0a8c8d6f37f4493be888) |
 | 📊 **Stellar Explorer** | [stellar.expert/explorer/testnet](https://stellar.expert/explorer/testnet) |
