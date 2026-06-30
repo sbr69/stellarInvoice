@@ -1,0 +1,42 @@
+# Dependency Directories
+node_modules/
+jspm_packages/
+web_modules/
+
+# Build and Output Directories
+dist/
+build/
+out/
+.next/
+tsconfig.tsbuildinfo
+contract/target/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Env
+.env
+.env.*
+!.env.example
