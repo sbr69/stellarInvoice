@@ -207,6 +207,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
   );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useWallet() {
   const context = useContext(WalletContext);
   if (context === undefined) {

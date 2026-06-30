@@ -1,13 +1,3 @@
-<p align="center">
-  <img src="https://img.shields.io/badge/Stellar-Testnet-blue?logo=stellar&logoColor=white" alt="Stellar Testnet" />
-  <img src="https://img.shields.io/badge/Soroban-Smart%20Contract-8b5cf6?logo=rust&logoColor=white" alt="Soroban" />
-  <img src="https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black" alt="React 19" />
-  <img src="https://img.shields.io/badge/Vite-6-646CFF?logo=vite&logoColor=white" alt="Vite 6" />
-  <img src="https://img.shields.io/badge/Express.js-4-000000?logo=express&logoColor=white" alt="Express.js" />
-  <img src="https://img.shields.io/badge/Supabase-PostgreSQL-3ECF8E?logo=supabase&logoColor=white" alt="Supabase" />
-  <img src="https://img.shields.io/badge/License-MIT-green" alt="License" />
-</p>
-
 # InvoiceChain — Decentralized Invoicing on Stellar
 
 > **Create blockchain-backed invoices. Get paid in XLM. Auto-verified on-chain.**
@@ -19,27 +9,6 @@ Instead of manually sharing wallet addresses and checking blockchain transaction
 Once the payment is completed, the platform **continuously monitors the Stellar blockchain**, verifies that the transaction matches the invoice based on the recipient wallet, asset, amount, and invoice ID (memo), and **automatically updates the invoice status** from `Pending` to `Paid` in real time. This eliminates manual reconciliation, reduces payment errors, and provides merchants with a simple, transparent, and reliable way to manage crypto invoices.
 
 Designed as a modern SaaS application, InvoiceChain combines a clean and responsive user experience with the speed, transparency, and security of Stellar to make blockchain-based invoicing practical for everyday business use.
-
----
-
-## 📑 Table of Contents
-
-- [Quick Links](#-quick-links)
-- [Demo & Screenshots](#-demo--screenshots)
-- [Features](#-features)
-- [Architecture](#-architecture)
-- [Tech Stack](#-tech-stack)
-- [Project Structure](#-project-structure)
-- [Smart Contract](#-smart-contract-soroban)
-- [API Reference](#-api-reference)
-- [Database Schema](#-database-schema)
-- [Getting Started](#-getting-started)
-- [Environment Variables](#-environment-variables)
-- [CI/CD Pipeline](#-cicd-pipeline)
-- [Testing](#-testing)
-- [Payment Flow](#-payment-flow-how-it-works)
-- [Contributing](#-contributing)
-- [License](#-license)
 
 ---
 

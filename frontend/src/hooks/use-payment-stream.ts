@@ -46,7 +46,7 @@ export function usePaymentStream(invoice: Invoice | null, signTransaction?: (xdr
         ? BigInt(invoice.total_amount_stroops)
         : xlmToStroops(invoice.total_amount.toString());
     }
-  }, [invoice?.status, invoice?.transaction_hash]);
+  }, [invoice, invoice?.status, invoice?.transaction_hash]);
 
   const verifyAndUpdateInvoice = useCallback(async (
     invoiceData: Invoice,
@@ -82,7 +82,7 @@ export function usePaymentStream(invoice: Invoice | null, signTransaction?: (xdr
     } finally {
       isVerifyingRef.current = false;
     }
-  }, []);
+  }, [signTransaction]);
 
   // Main streaming effect
   useEffect(() => {
@@ -192,7 +192,7 @@ export function usePaymentStream(invoice: Invoice | null, signTransaction?: (xdr
         pollIntervalRef.current = null;
       }
     };
-  }, [invoice?.id, invoice?.status, invoice?.recipient_wallet_address, invoice?.memo_id, status, verifyAndUpdateInvoice]);
+  }, [invoice, invoice?.id, invoice?.status, invoice?.recipient_wallet_address, invoice?.memo_id, status, verifyAndUpdateInvoice]);
 
   return {
     status,

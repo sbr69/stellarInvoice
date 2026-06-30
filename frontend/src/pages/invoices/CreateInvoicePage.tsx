@@ -30,7 +30,7 @@ export default function CreateInvoicePage() {
   const [clientEmail, setClientEmail] = useState('');
   const [items, setItems] = useState<InvoiceFormItem[]>([{ description: '', quantity: '1', unit_price: '0' }]);
   const [recipientWallet, setRecipientWallet] = useState(walletAddress || '');
-  const [dueDate, setDueDate] = useState(() => {
+  const [dueDate] = useState(() => {
     const d = new Date();
     const year = d.getFullYear();
     const month = String(d.getMonth() + 1).padStart(2, '0');

@@ -8,7 +8,7 @@ import { truncateAddress } from '@/lib/stellar';
 import { useToast } from '@/components/toast';
 
 export function Header() {
-  const { isConnected, walletAddress, isConnecting, connectWallet, disconnectWallet, error, clearError, network } = useWallet();
+  const { isConnected, walletAddress, isConnecting, connectWallet, disconnectWallet, error, clearError } = useWallet();
   const navigate = useNavigate();
   const { showToast } = useToast();
 
