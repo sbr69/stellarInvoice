@@ -40,3 +40,27 @@ dist-ssr
 .env
 .env.*
 !.env.example
+
+# Supabase Local Temp
+supabase/.temp/
+
+# Caches and Linter state
+.eslintcache
+.cache/
+.parcel-cache/
+.turbo/
+
+# AI, Tooling, and Workspace Scratch Files
+.claude/
+.gemini/
+scratch/
+frontend/scratch/
+backend/scratch/
+
+# Temporary, Backup, and System Files
+*.tmp
+*.temp
+*.bak
+*~
+
+
