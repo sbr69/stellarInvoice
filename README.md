@@ -25,19 +25,20 @@ Designed as a modern SaaS application, InvoiceChain combines a clean and respons
 
 ## 📸 Demo & Screenshots
 
-### 🖥️ Desktop UI
-<!-- Replace the path below with actual screenshot -->
-```
-📌 Add screenshot: Desktop dashboard view showing invoices list
-   Save to: screenshots/desktop-dashboard.png
-```
 
 ### 📱 Mobile Responsive UI
-<!-- Replace the path below with actual screenshot -->
-```
-📌 Add screenshot: Mobile responsive view of the invoice/pay page
-   Save to: screenshots/mobile-responsive.png
-```
+
+<p align="center">
+  <img src="screenshots/mobile/iPhone-14-PRO-stellar-invoice-ecru.vercel.app(0).png" width="30%" alt="Landing Page" />
+  <img src="screenshots/mobile/iPhone-14-PRO-stellar-invoice-ecru.vercel.app%20(1).png" width="30%" alt="Dashboard" />
+  <img src="screenshots/mobile/iPhone-14-PRO-stellar-invoice-ecru.vercel.app%20(2).png" width="30%" alt="Create Invoice" />
+</p>
+<br/>
+<p align="center">
+  <img src="screenshots/mobile/iPhone-14-PRO-stellar-invoice-ecru.vercel.app%20(3).png" width="30%" alt="Invoices List" />
+  <img src="screenshots/mobile/iPhone-14-PRO-stellar-invoice-ecru.vercel.app%20(4).png" width="30%" alt="Invoice Detail" />
+  <img src="screenshots/mobile/iPhone-14-PRO-stellar-invoice-ecru.vercel.app%20(5).png" width="30%" alt="Payment Page" />
+</p>
 
 ### ✅ CI/CD Pipeline Running
 <!-- 
@@ -49,10 +50,12 @@ HOW TO GET THIS SCREENSHOT:
 5. Take a screenshot showing all 3 jobs with green checkmarks
 6. Save it as screenshots/cicd-pipeline.png
 -->
-```
-📌 Add screenshot: GitHub Actions tab showing successful CI pipeline
-   Save to: screenshots/cicd-pipeline.png
-```
+<p align="center">
+  <img src="screenshots/CICD/Screenshot%202026-07-01%20002255.png" width="85%" alt="CI/CD Jobs" />
+</p>
+<p align="center">
+  <img src="screenshots/CICD/Screenshot%202026-07-01%20002325.png" width="85%" alt="CI/CD Summary" />
+</p>
 
 ### 🧪 Test Output (3+ Passing Tests)
 <!-- 
@@ -62,18 +65,13 @@ HOW TO GET THIS SCREENSHOT:
 3. Take a screenshot showing the test results (12 tests passing)
 4. Save it as screenshots/test-output.png
 -->
-```
-📌 Add screenshot: Terminal showing cargo test output with 12 passing tests
-   Save to: screenshots/test-output.png
-```
+<p align="center">
+  <img src="screenshots/Tests/Screenshot%202026-07-01%20003406.png" width="85%" alt="Cargo Test Output" />
+</p>
 
 ### 🎬 Demo Video
 <!-- Replace with your demo video link -->
-```
-📌 Add link: 1–2 minute demo video showing the full invoice flow
-   Upload to: YouTube or Loom and paste the link below
-```
-> 🎥 **Demo Video**: `<your-video-link>`
+> 🎥 **Demo Video**: [youtu.be/u812bmpqRc8](https://youtu.be/u812bmpqRc8)
 
 ---
 
