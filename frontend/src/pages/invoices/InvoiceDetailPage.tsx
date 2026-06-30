@@ -107,12 +107,12 @@ export default function InvoiceDetailPage() {
           <Link to="/invoices" className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-gray-900 transition-colors">
             <ArrowLeft className="w-4 h-4" /> Back to Invoices
           </Link>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2.5 flex-wrap w-full sm:w-auto">
             {invoice.status === 'Pending' && (
               <button 
                 onClick={handleCancel}
                 disabled={cancelling}
-                className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-red-600 bg-red-50 hover:bg-red-100 rounded-xl transition-colors disabled:opacity-50"
+                className="inline-flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium text-red-600 bg-red-50 hover:bg-red-100 rounded-xl transition-colors disabled:opacity-50 flex-1 sm:flex-initial whitespace-nowrap"
               >
                 <XCircle className="w-4 h-4" /> {cancelling ? 'Cancelling...' : 'Cancel Invoice'}
               </button>
@@ -120,7 +120,7 @@ export default function InvoiceDetailPage() {
             <Link 
               to={`/pay/${invoice.id}`}
               target="_blank"
-              className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-200 hover:bg-gray-50 rounded-xl transition-colors shadow-sm"
+              className="inline-flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-200 hover:bg-gray-50 rounded-xl transition-colors shadow-sm flex-1 sm:flex-initial whitespace-nowrap"
             >
               <ExternalLink className="w-4 h-4" /> View Public Page
             </Link>
@@ -129,33 +129,34 @@ export default function InvoiceDetailPage() {
 
         <div className="grid md:grid-cols-3 gap-6">
           <div className="md:col-span-2 space-y-6">
-            <div className="bg-white p-6 sm:p-8 rounded-3xl border border-gray-200 shadow-sm">
+            <div className="bg-white p-4 sm:p-8 rounded-2xl sm:rounded-3xl border border-gray-200 shadow-sm">
               <div className="flex justify-between items-start mb-8">
                 <div>
-                  <h1 className="text-3xl font-bold text-gray-900 mb-2">{invoice.invoice_number}</h1>
+                  <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">{invoice.invoice_number}</h1>
                   {getStatusBadge(invoice.status)}
                 </div>
                 <div className="text-right">
-                  <p className="text-sm text-gray-500 mb-1">Issue Date</p>
-                  <p className="font-medium text-gray-900">{format(new Date(invoice.created_at), 'MMM d, yyyy')}</p>
+                  <p className="text-xs sm:text-sm text-gray-500 mb-1">Issue Date</p>
+                  <p className="font-medium text-gray-900 text-sm sm:text-base">{format(new Date(invoice.created_at), 'MMM d, yyyy')}</p>
                 </div>
               </div>
 
-              <div className="grid sm:grid-cols-2 gap-8 mb-8 p-6 bg-gray-50 rounded-2xl border border-gray-100">
+              <div className="grid sm:grid-cols-2 gap-6 sm:gap-8 mb-8 p-4 sm:p-6 bg-gray-50 rounded-2xl border border-gray-100">
                 <div>
                   <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Billed To</p>
-                  <p className="font-semibold text-gray-900 text-lg">{invoice.client_name}</p>
-                  {invoice.client_email && <p className="text-gray-600">{invoice.client_email}</p>}
+                  <p className="font-semibold text-gray-900 text-base sm:text-lg">{invoice.client_name}</p>
+                  {invoice.client_email && <p className="text-sm sm:text-base text-gray-600">{invoice.client_email}</p>}
                 </div>
                 <div className="sm:text-right">
                   <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Amount Due</p>
-                  <p className="text-3xl font-bold text-violet-600">{invoice.total_amount} <span className="text-xl text-violet-400">XLM</span></p>
-                  {invoice.due_date && <p className="text-sm text-gray-500 mt-1">Due {format(new Date(invoice.due_date), 'MMM d, yyyy')}</p>}
+                  <p className="text-2xl sm:text-3xl font-bold text-violet-600">{invoice.total_amount} <span className="text-lg sm:text-xl text-violet-400">XLM</span></p>
+                  {invoice.due_date && <p className="text-xs sm:text-sm text-gray-500 mt-1">Due {format(new Date(invoice.due_date), 'MMM d, yyyy')}</p>}
                 </div>
               </div>
 
               <div className="mb-8">
-                <table className="w-full text-left">
+                {/* Desktop View */}
+                <table className="hidden sm:table w-full text-left">
                   <thead>
                     <tr className="border-b border-gray-200">
                       <th className="py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Description</th>
@@ -181,6 +182,26 @@ export default function InvoiceDetailPage() {
                     </tr>
                   </tfoot>
                 </table>
+
+                {/* Mobile View */}
+                <div className="sm:hidden space-y-4">
+                  <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider border-b border-gray-200 pb-2">Items</div>
+                  <div className="divide-y divide-gray-100">
+                    {invoice.items?.map(item => (
+                      <div key={item.id} className="py-3 flex justify-between items-start gap-4">
+                        <div className="space-y-1">
+                          <p className="font-medium text-gray-900 text-sm">{item.description}</p>
+                          <p className="text-xs text-gray-500">{item.quantity} × {item.unit_price} XLM</p>
+                        </div>
+                        <p className="font-medium text-gray-900 text-sm">{(item.quantity * item.unit_price).toLocaleString()} XLM</p>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="border-t border-gray-200 pt-4 flex justify-between items-center">
+                    <span className="font-semibold text-gray-900">Total Amount</span>
+                    <span className="font-bold text-gray-900 text-lg">{invoice.total_amount} XLM</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

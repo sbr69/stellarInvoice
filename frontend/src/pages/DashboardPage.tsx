@@ -56,42 +56,42 @@ export default function DashboardPage() {
 
         {/* Metrics */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm">
+          <div className="bg-white p-4 sm:p-6 rounded-2xl border border-gray-200 shadow-sm">
             <div className="flex items-center gap-3 text-gray-500 mb-2">
               <ArrowUpRight className="w-5 h-5 text-violet-500" />
               <span className="font-medium">Total Revenue</span>
             </div>
-            <div className="text-3xl font-bold text-gray-900 flex items-baseline gap-1">
-              {totalRevenue.toLocaleString()} <span className="text-base font-medium text-gray-500">XLM</span>
+            <div className="text-2xl sm:text-3xl font-bold text-gray-900 flex items-baseline gap-1">
+              {totalRevenue.toLocaleString()} <span className="text-sm sm:text-base font-medium text-gray-500">XLM</span>
             </div>
           </div>
           
-          <div className="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm">
+          <div className="bg-white p-4 sm:p-6 rounded-2xl border border-gray-200 shadow-sm">
             <div className="flex items-center gap-3 text-gray-500 mb-2">
               <FileText className="w-5 h-5 text-teal-500" />
               <span className="font-medium">Total Invoices</span>
             </div>
-            <div className="text-3xl font-bold text-gray-900">
+            <div className="text-2xl sm:text-3xl font-bold text-gray-900">
               {invoices.length}
             </div>
           </div>
           
-          <div className="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm">
+          <div className="bg-white p-4 sm:p-6 rounded-2xl border border-gray-200 shadow-sm">
             <div className="flex items-center gap-3 text-gray-500 mb-2">
               <Clock className="w-5 h-5 text-amber-500" />
               <span className="font-medium">Pending</span>
             </div>
-            <div className="text-3xl font-bold text-gray-900">
+            <div className="text-2xl sm:text-3xl font-bold text-gray-900">
               {pendingCount}
             </div>
           </div>
 
-          <div className="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm">
+          <div className="bg-white p-4 sm:p-6 rounded-2xl border border-gray-200 shadow-sm">
             <div className="flex items-center gap-3 text-gray-500 mb-2">
               <CheckCircle2 className="w-5 h-5 text-green-500" />
               <span className="font-medium">Paid</span>
             </div>
-            <div className="text-3xl font-bold text-gray-900">
+            <div className="text-2xl sm:text-3xl font-bold text-gray-900">
               {paidCount}
             </div>
           </div>
@@ -115,40 +115,67 @@ export default function DashboardPage() {
               <Link to="/invoices/create" className="mt-4 text-violet-600 font-medium hover:underline">Create your first invoice</Link>
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse">
-                <thead>
-                  <tr className="bg-gray-50 border-b border-gray-100">
-                    <th className="py-3 px-6 text-xs font-semibold text-gray-500 uppercase tracking-wider">Invoice</th>
-                    <th className="py-3 px-6 text-xs font-semibold text-gray-500 uppercase tracking-wider">Client</th>
-                    <th className="py-3 px-6 text-xs font-semibold text-gray-500 uppercase tracking-wider">Amount</th>
-                    <th className="py-3 px-6 text-xs font-semibold text-gray-500 uppercase tracking-wider">Status</th>
-                    <th className="py-3 px-6 text-xs font-semibold text-gray-500 uppercase tracking-wider">Date</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-100">
-                  {recentInvoices.map(inv => (
-                    <tr key={inv.id} className="hover:bg-gray-50 transition-colors group">
-                      <td className="py-4 px-6">
-                        <Link to={`/invoices/${inv.id}`} className="font-medium text-gray-900 group-hover:text-violet-600 transition-colors">
-                          {inv.invoice_number}
-                        </Link>
-                      </td>
-                      <td className="py-4 px-6 text-gray-600">{inv.client_name}</td>
-                      <td className="py-4 px-6 font-medium text-gray-900">{inv.total_amount} {inv.asset}</td>
-                      <td className="py-4 px-6">
-                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${getStatusColor(inv.status)}`}>
-                          {inv.status}
-                        </span>
-                      </td>
-                      <td className="py-4 px-6 text-gray-500 text-sm">
-                        {format(new Date(inv.created_at), 'MMM d, yyyy')}
-                      </td>
+            <>
+              {/* Desktop Table View */}
+              <div className="hidden md:block overflow-x-auto">
+                <table className="w-full text-left border-collapse">
+                  <thead>
+                    <tr className="bg-gray-50 border-b border-gray-100">
+                      <th className="py-3 px-6 text-xs font-semibold text-gray-500 uppercase tracking-wider">Invoice</th>
+                      <th className="py-3 px-6 text-xs font-semibold text-gray-500 uppercase tracking-wider">Client</th>
+                      <th className="py-3 px-6 text-xs font-semibold text-gray-500 uppercase tracking-wider">Amount</th>
+                      <th className="py-3 px-6 text-xs font-semibold text-gray-500 uppercase tracking-wider">Status</th>
+                      <th className="py-3 px-6 text-xs font-semibold text-gray-500 uppercase tracking-wider">Date</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody className="divide-y divide-gray-100">
+                    {recentInvoices.map(inv => (
+                      <tr key={inv.id} className="hover:bg-gray-50 transition-colors group">
+                        <td className="py-4 px-6">
+                          <Link to={`/invoices/${inv.id}`} className="font-medium text-gray-900 group-hover:text-violet-600 transition-colors">
+                            {inv.invoice_number}
+                          </Link>
+                        </td>
+                        <td className="py-4 px-6 text-gray-600">{inv.client_name}</td>
+                        <td className="py-4 px-6 font-medium text-gray-900">{inv.total_amount} {inv.asset}</td>
+                        <td className="py-4 px-6">
+                          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${getStatusColor(inv.status)}`}>
+                            {inv.status}
+                          </span>
+                        </td>
+                        <td className="py-4 px-6 text-gray-500 text-sm">
+                          {format(new Date(inv.created_at), 'MMM d, yyyy')}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Mobile Card List View */}
+              <div className="md:hidden divide-y divide-gray-100">
+                {recentInvoices.map(inv => (
+                  <div key={inv.id} className="p-4 flex items-center justify-between hover:bg-gray-50 transition-colors">
+                    <div className="space-y-1">
+                      <Link to={`/invoices/${inv.id}`} className="font-semibold text-gray-900 hover:text-violet-600 transition-colors block">
+                        {inv.invoice_number}
+                      </Link>
+                      <div className="text-xs text-gray-500 flex items-center gap-1.5 flex-wrap">
+                        <span>{inv.client_name}</span>
+                        <span>•</span>
+                        <span>{format(new Date(inv.created_at), 'MMM d, yyyy')}</span>
+                      </div>
+                    </div>
+                    <div className="text-right space-y-1">
+                      <p className="font-semibold text-gray-900 text-sm">{inv.total_amount} {inv.asset}</p>
+                      <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium border ${getStatusColor(inv.status)}`}>
+                        {inv.status}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
           )}
         </div>
       </div>

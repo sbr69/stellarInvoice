@@ -179,7 +179,7 @@ export default function CreateInvoicePage() {
             <div className="space-y-4">
               {items.map((item, index) => (
                 <div key={index} className="flex flex-col sm:flex-row gap-4 p-4 border border-gray-200 rounded-xl bg-gray-50 relative group">
-                  <div className="flex-1">
+                  <div className="flex-1 w-full">
                     <label className="block text-xs font-medium text-gray-500 mb-1 uppercase tracking-wider">Description</label>
                     <input 
                       type="text" 
@@ -189,31 +189,33 @@ export default function CreateInvoicePage() {
                       className="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-500"
                     />
                   </div>
-                  <div className="w-full sm:w-24">
-                    <label className="block text-xs font-medium text-gray-500 mb-1 uppercase tracking-wider">Qty</label>
-                    <input 
-                      type="number" 
-                      min="1"
-                      value={item.quantity}
-                      onChange={(e) => handleItemChange(index, 'quantity', e.target.value)}
-                      className="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-500"
-                    />
-                  </div>
-                  <div className="w-full sm:w-32">
-                    <label className="block text-xs font-medium text-gray-500 mb-1 uppercase tracking-wider">Price (XLM)</label>
-                    <input 
-                      type="number" 
-                      min="0"
-                      step="0.0000001"
-                      value={item.unit_price}
-                      onChange={(e) => handleItemChange(index, 'unit_price', e.target.value)}
-                      className="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-500"
-                    />
+                  <div className="flex gap-4 w-full sm:w-auto shrink-0">
+                    <div className="w-1/3 sm:w-24">
+                      <label className="block text-xs font-medium text-gray-500 mb-1 uppercase tracking-wider">Qty</label>
+                      <input 
+                        type="number" 
+                        min="1"
+                        value={item.quantity}
+                        onChange={(e) => handleItemChange(index, 'quantity', e.target.value)}
+                        className="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-500"
+                      />
+                    </div>
+                    <div className="w-2/3 sm:w-32">
+                      <label className="block text-xs font-medium text-gray-500 mb-1 uppercase tracking-wider">Price (XLM)</label>
+                      <input 
+                        type="number" 
+                        min="0"
+                        step="0.0000001"
+                        value={item.unit_price}
+                        onChange={(e) => handleItemChange(index, 'unit_price', e.target.value)}
+                        className="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-500"
+                      />
+                    </div>
                   </div>
                   {items.length > 1 && (
                     <button 
                       onClick={() => handleRemoveItem(index)}
-                      className="absolute -right-2 -top-2 bg-red-100 text-red-600 p-1.5 rounded-full shadow-sm opacity-0 group-hover:opacity-100 transition-opacity sm:static sm:opacity-100 sm:self-end sm:mb-2 sm:bg-transparent sm:shadow-none sm:hover:bg-red-50"
+                      className="absolute -right-2 -top-2 bg-red-100 text-red-600 p-1.5 rounded-full shadow-sm opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity sm:static sm:opacity-100 sm:self-end sm:mb-2 sm:bg-transparent sm:shadow-none sm:hover:bg-red-50"
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>
@@ -381,7 +383,7 @@ export default function CreateInvoicePage() {
 
   return (
     <AuthGuard>
-      <div className="max-w-2xl mx-auto py-8">
+      <div className="max-w-2xl mx-auto py-4 sm:py-8 px-4 sm:px-0">
         <Link to="/invoices" className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-gray-900 mb-8 transition-colors">
           <ArrowLeft className="w-4 h-4" /> Back to Invoices
         </Link>
@@ -407,7 +409,7 @@ export default function CreateInvoicePage() {
           ))}
         </div>
 
-        <div className="bg-white p-6 sm:p-8 rounded-3xl border border-gray-200 shadow-sm">
+        <div className="bg-white p-4 sm:p-8 rounded-2xl sm:rounded-3xl border border-gray-200 shadow-sm">
           {renderStepContent()}
         </div>
       </div>

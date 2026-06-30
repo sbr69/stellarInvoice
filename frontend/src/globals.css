@@ -1,1 +1,13 @@
 @import "tailwindcss";
+
+/* Hide scrollbar on Stellar Wallets Kit Modal */
+.stellar-wallets-kit section {
+  overflow-y: auto !important;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+.stellar-wallets-kit section::-webkit-scrollbar {
+  display: none !important;
+}
+

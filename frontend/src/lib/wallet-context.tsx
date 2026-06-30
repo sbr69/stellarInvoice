@@ -38,6 +38,25 @@ export function WalletProvider({ children }: { children: ReactNode }) {
         StellarWalletsKit.init({
           modules: defaultModules(),
           network: Networks.TESTNET,
+          theme: {
+            background: "#ffffff",
+            "background-secondary": "#f9fafb",
+            "foreground-strong": "#111827",
+            "foreground": "#374151",
+            "foreground-secondary": "#6b7280",
+            primary: "#8b5cf6",
+            "primary-foreground": "#ffffff",
+            transparent: "transparent",
+            lighter: "#f5f3ff",
+            light: "#edf2f7",
+            "light-gray": "#f3f4f6",
+            gray: "#9ca3af",
+            danger: "#ef4444",
+            border: "#e5e7eb",
+            shadow: "0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02)",
+            "border-radius": "1rem",
+            "font-family": "Inter, ui-sans-serif, system-ui, -apple-system, sans-serif"
+          }
         });
       } catch (err) {
         console.error('Failed to initialize StellarWalletsKit:', err);

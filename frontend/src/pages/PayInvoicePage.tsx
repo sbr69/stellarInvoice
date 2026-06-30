@@ -201,8 +201,8 @@ export default function PublicInvoicePage() {
   );
 
   return (
-    <div className="min-h-screen bg-[#FAFAFA] py-12 px-4 sm:px-6">
-      <div className="max-w-3xl mx-auto space-y-8">
+    <div className="min-h-screen bg-[#FAFAFA] py-6 px-4 sm:py-12 sm:px-6">
+      <div className="max-w-3xl mx-auto space-y-6 sm:space-y-8">
 
         {/* Header Branding */}
         <div className="flex justify-center mb-8">
@@ -222,7 +222,7 @@ export default function PublicInvoicePage() {
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ type: 'spring', duration: 0.6 }}
-              className="bg-white p-10 rounded-3xl border border-green-100 shadow-xl shadow-green-900/5 text-center relative overflow-hidden"
+              className="bg-white p-6 sm:p-10 rounded-2xl sm:rounded-3xl border border-green-100 shadow-xl shadow-green-900/5 text-center relative overflow-hidden"
             >
               <div className="absolute -top-24 -left-24 w-48 h-48 bg-green-400/20 blur-3xl rounded-full"></div>
               <div className="absolute -bottom-24 -right-24 w-48 h-48 bg-teal-400/20 blur-3xl rounded-full"></div>
@@ -269,8 +269,8 @@ export default function PublicInvoicePage() {
               className="grid md:grid-cols-5 gap-6"
             >
               {/* Left: Invoice Details */}
-              <div className="md:col-span-3 bg-white p-6 sm:p-8 rounded-3xl border border-gray-200 shadow-sm">
-                <div className="flex justify-between items-start mb-8 border-b border-gray-100 pb-6">
+              <div className="md:col-span-3 bg-white p-5 sm:p-8 rounded-2xl sm:rounded-3xl border border-gray-200 shadow-sm">
+                <div className="flex justify-between items-start mb-6 sm:mb-8 border-b border-gray-100 pb-5 sm:pb-6">
                   <div>
                     <h1 className="text-3xl font-bold text-gray-900 mb-2">{invoice.invoice_number}</h1>
                     {isPayable && (
@@ -335,8 +335,8 @@ export default function PublicInvoicePage() {
 
               {/* Right: Payment Controls */}
               <div className="md:col-span-2 space-y-4">
-                <div className="bg-white p-6 rounded-3xl border border-gray-200 shadow-sm text-center">
-                  <h3 className="font-semibold text-gray-900 mb-6">Pay this Invoice</h3>
+                <div className="bg-white p-5 sm:p-6 rounded-2xl sm:rounded-3xl border border-gray-200 shadow-sm text-center">
+                  <h3 className="font-semibold text-gray-900 mb-5 sm:mb-6">Pay this Invoice</h3>
 
                   {(isCancelled || isExpired) ? (
                     <div className="bg-gray-50 text-gray-500 p-4 rounded-xl border border-gray-200">

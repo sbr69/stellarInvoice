@@ -4,11 +4,11 @@ import { NETWORK_PASSPHRASE } from './stellar';
 const SOROBAN_RPC_URL = 'https://soroban-testnet.stellar.org';
 const CONTRACT_ID = import.meta.env.VITE_SOROBAN_CONTRACT_ID || '';
 
-let _sorobanServer: StellarSdk.Soroban.Server | null = null;
+let _sorobanServer: StellarSdk.rpc.Server | null = null;
 
-function getSorobanServer(): StellarSdk.Soroban.Server {
+function getSorobanServer(): StellarSdk.rpc.Server {
   if (!_sorobanServer) {
-    _sorobanServer = new StellarSdk.Soroban.Server(SOROBAN_RPC_URL);
+    _sorobanServer = new StellarSdk.rpc.Server(SOROBAN_RPC_URL);
   }
   return _sorobanServer;
 }
@@ -25,7 +25,7 @@ async function prepareAndSubmitTx(
   sourcePublicKey: string,
   operation: StellarSdk.xdr.Operation,
   signTransaction: (xdr: string) => Promise<string>
-): Promise<StellarSdk.Soroban.Api.GetTransactionResponse> {
+): Promise<StellarSdk.rpc.Api.GetTransactionResponse> {
   const server = getSorobanServer();
   const account = await server.getAccount(sourcePublicKey);
 
@@ -144,7 +144,7 @@ export async function getInvoiceFromChain(
 
   try {
     const response = await server.simulateTransaction(tx);
-    if (StellarSdk.Soroban.Api.isSimulationSuccess(response)) {
+    if (StellarSdk.rpc.Api.isSimulationSuccess(response)) {
       return StellarSdk.scValToNative(response.result!.retval);
     }
     return null;

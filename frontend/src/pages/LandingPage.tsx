@@ -2,10 +2,10 @@ import { useWallet } from '@/lib/wallet-context';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { Header } from '@/components/header';
-import { Wallet, ShieldCheck, Zap, Link as LinkIcon, ArrowRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
 export default function LandingPage() {
-  const { isConnected, connectWallet } = useWallet();
+  const { isConnected } = useWallet();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -20,11 +20,6 @@ export default function LandingPage() {
       
       <main className="flex-1 flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 py-20">
         <div className="max-w-4xl mx-auto text-center space-y-8">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-violet-50 text-violet-700 text-sm font-medium border border-violet-100">
-            <span className="flex h-2 w-2 rounded-full bg-violet-500"></span>
-            Stellar Network Integration
-          </div>
-          
           <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-gray-900">
             Web3 Invoicing, <br className="hidden sm:block" />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-teal-500">
@@ -33,51 +28,8 @@ export default function LandingPage() {
           </h1>
           
           <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
-            Create, share, and get paid instantly. No passwords, no borders, just connect your Stellar wallet and start billing your clients in seconds.
+            Decentralized billing built for the modern economy. Securely register invoices on the Stellar network, share payment links, and verify client transactions in real-time.
           </p>
-          
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
-            <button
-              onClick={connectWallet}
-              className="w-full sm:w-auto flex items-center justify-center gap-2 bg-gray-900 hover:bg-gray-800 text-white px-8 py-3.5 rounded-full font-medium text-lg transition-all shadow-lg shadow-gray-900/20 hover:shadow-xl hover:scale-[1.02] active:scale-[0.98]"
-            >
-              <Wallet className="w-5 h-5" />
-              Connect Wallet to Start
-            </button>
-            <a 
-              href="#how-it-works"
-              className="w-full sm:w-auto flex items-center justify-center gap-2 bg-white text-gray-700 hover:text-gray-900 border border-gray-200 px-8 py-3.5 rounded-full font-medium text-lg transition-all hover:bg-gray-50"
-            >
-              Learn More
-            </a>
-          </div>
-        </div>
-
-        {/* Feature Grid */}
-        <div id="how-it-works" className="max-w-5xl mx-auto grid sm:grid-cols-3 gap-8 mt-32">
-          <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
-            <div className="w-12 h-12 bg-teal-50 text-teal-600 rounded-xl flex items-center justify-center mb-6">
-              <ShieldCheck className="w-6 h-6" />
-            </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">No Passwords</h3>
-            <p className="text-gray-600 leading-relaxed">Your identity is your wallet. Connect instantly without the hassle of email sign-ups or forgotten passwords.</p>
-          </div>
-          
-          <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
-            <div className="w-12 h-12 bg-violet-50 text-violet-600 rounded-xl flex items-center justify-center mb-6">
-              <Zap className="w-6 h-6" />
-            </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Instant Verification</h3>
-            <p className="text-gray-600 leading-relaxed">Payments are verified on-chain in real-time. No more waiting days for bank transfers to clear.</p>
-          </div>
-
-          <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
-            <div className="w-12 h-12 bg-amber-50 text-amber-600 rounded-xl flex items-center justify-center mb-6">
-              <LinkIcon className="w-6 h-6" />
-            </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Shareable Links</h3>
-            <p className="text-gray-600 leading-relaxed">Generate a clean, professional public invoice page that your clients can pay with a single click.</p>
-          </div>
         </div>
 
         {/* 3 Step Flow */}
