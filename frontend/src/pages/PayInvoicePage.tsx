@@ -19,11 +19,11 @@ import {
   ExternalLink,
   Radio,
   Loader2,
-  AlertTriangle,
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { motion, AnimatePresence } from 'motion/react';
 import { QRCodeSVG } from 'qrcode.react';
+import { useToast } from '@/components/toast';
 
 type PaymentState = 'idle' | 'connecting' | 'building' | 'signing' | 'submitting' | 'success' | 'error';
 
@@ -34,10 +34,9 @@ export default function PublicInvoicePage() {
   const [showManual, setShowManual] = useState(false);
   const [simulating, setSimulating] = useState(false);
   const [copiedField, setCopiedField] = useState<string | null>(null);
+  const { showToast } = useToast();
 
-  // Pay Now state machine
   const [paymentState, setPaymentState] = useState<PaymentState>('idle');
-  const [paymentError, setPaymentError] = useState<string | null>(null);
 
   // Real-time Horizon payment streaming
   const { status: liveStatus, txHash: liveTxHash, streamStatus } = usePaymentStream(invoice);
@@ -68,7 +67,6 @@ export default function PublicInvoicePage() {
   // ---- Real StellarWalletsKit Payment Flow ----
   const handlePayWithWallet = async () => {
     if (!invoice) return;
-    setPaymentError(null);
 
     try {
       // Step 1: Connect Wallet via StellarWalletsKit Modal
@@ -79,7 +77,7 @@ export default function PublicInvoicePage() {
       const senderAddress = result?.address;
 
       if (!senderAddress) {
-        setPaymentError('Could not get wallet address. Please try again.');
+        showToast('Could not get wallet address. Please try again.', 'error');
         setPaymentState('error');
         return;
       }
@@ -102,7 +100,7 @@ export default function PublicInvoicePage() {
       const signedXdr = signResult.signedTxXdr;
 
       if (!signedXdr) {
-        setPaymentError('Transaction signing was rejected.');
+        showToast('Transaction signing was rejected.', 'error');
         setPaymentState('error');
         return;
       }
@@ -113,27 +111,29 @@ export default function PublicInvoicePage() {
 
       if (submitResult.successful) {
         setPaymentState('success');
+        showToast('Payment completed successfully!', 'success');
         // The Horizon stream will detect this payment and update the DB automatically.
         // But let's also do it here for immediate feedback.
         await db.updateInvoiceStatus(invoice.id, 'Paid', submitResult.hash);
         await loadInvoice();
       } else {
-        setPaymentError('Transaction failed on the Stellar network. Please try again.');
+        showToast('Transaction failed on the Stellar network. Please try again.', 'error');
         setPaymentState('error');
       }
     } catch (err: unknown) {
       console.error('Payment failed:', err);
       const message = err instanceof Error ? err.message : 'Payment failed';
+      let displayMessage = message;
 
       if (message.includes('declined') || message.includes('rejected') || message.includes('cancelled')) {
-        setPaymentError('Transaction was rejected in your wallet.');
+        displayMessage = 'Transaction was rejected in your wallet.';
       } else if (message.includes('op_underfunded') || message.includes('insufficient')) {
-        setPaymentError('Insufficient XLM balance. Fund your wallet using Friendbot on testnet.');
+        displayMessage = 'Insufficient XLM balance. Fund your wallet using Friendbot on testnet.';
       } else if (message.includes('op_no_destination') || message.includes('not found')) {
-        setPaymentError('Destination account does not exist on the Stellar network. It needs to be funded first.');
-      } else {
-        setPaymentError(message);
+        displayMessage = 'Destination account does not exist on the Stellar network. It needs to be funded first.';
       }
+
+      showToast(displayMessage, 'error');
       setPaymentState('error');
     }
   };
@@ -146,8 +146,10 @@ export default function PublicInvoicePage() {
       const fakeTxHash = 'SIM_' + crypto.randomUUID().replace(/-/g, '').substring(0, 32);
       await db.updateInvoiceStatus(invoice.id, 'Paid', fakeTxHash);
       await loadInvoice();
+      showToast('Payment simulated successfully!', 'success');
     } catch (e) {
       console.error(e);
+      showToast('Failed to simulate payment', 'error');
     } finally {
       setSimulating(false);
     }
@@ -159,8 +161,9 @@ export default function PublicInvoicePage() {
       await navigator.clipboard.writeText(text);
       setCopiedField(field);
       setTimeout(() => setCopiedField(null), 2000);
+      showToast(`${field} copied to clipboard!`, 'success');
     } catch {
-      // Fallback
+      showToast('Failed to copy to clipboard', 'error');
     }
   };
 
@@ -386,19 +389,7 @@ export default function PublicInvoicePage() {
                         {paymentState === 'error' && <><Wallet className="w-5 h-5" /> Try Again</>}
                       </button>
 
-                      {/* Payment error message */}
-                      {paymentError && (
-                        <motion.div
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: 'auto' }}
-                          className="mt-2 p-3 bg-red-50 border border-red-100 rounded-lg text-left"
-                        >
-                          <div className="flex items-start gap-2">
-                            <AlertTriangle className="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
-                            <p className="text-xs text-red-700">{paymentError}</p>
-                          </div>
-                        </motion.div>
-                      )}
+
 
                       {/* Divider */}
                       <div className="relative my-4">

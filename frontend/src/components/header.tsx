@@ -1,14 +1,23 @@
 'use client';
 
+import { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useWallet } from '@/lib/wallet-context';
-import { LogOut, Wallet, AlertCircle, X, ExternalLink } from 'lucide-react';
+import { LogOut, Wallet } from 'lucide-react';
 import { truncateAddress } from '@/lib/stellar';
-import { AnimatePresence, motion } from 'motion/react';
+import { useToast } from '@/components/toast';
 
 export function Header() {
   const { isConnected, walletAddress, isConnecting, connectWallet, disconnectWallet, error, clearError, network } = useWallet();
   const navigate = useNavigate();
+  const { showToast } = useToast();
+
+  useEffect(() => {
+    if (error) {
+      showToast(error, 'error');
+      clearError();
+    }
+  }, [error, clearError, showToast]);
 
   const handleDisconnect = () => {
     disconnectWallet();
@@ -81,38 +90,6 @@ export function Header() {
           </div>
         </div>
       </header>
-
-      {/* Wallet connection error banner */}
-      <AnimatePresence>
-        {error && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="bg-red-50 border-b border-red-100"
-          >
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-4">
-              <div className="flex items-center gap-2 text-sm text-red-700">
-                <AlertCircle className="w-4 h-4 shrink-0" />
-                <span>{error}</span>
-                {error.includes('freighter.app') && (
-                  <a
-                    href="https://freighter.app"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center gap-1 underline font-medium hover:text-red-900"
-                  >
-                    Install Freighter <ExternalLink className="w-3 h-3" />
-                  </a>
-                )}
-              </div>
-              <button onClick={clearError} className="text-red-400 hover:text-red-600 shrink-0">
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </>
   );
 }

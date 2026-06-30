@@ -6,7 +6,7 @@ import { db } from '@/lib/api-client';
 import { Invoice, InvoiceItem } from '@/lib/types';
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { ArrowLeft, ArrowRight, CheckCircle2, Trash2, Plus, AlertCircle } from 'lucide-react';
+import { ArrowLeft, ArrowRight, CheckCircle2, Trash2, Plus } from 'lucide-react';
 import { formatXlmAmount, stroopsToXlmString, xlmToStroops } from '@/lib/stellar';
 import { createInvoiceOnChain, isContractConfigured } from '@/lib/soroban-client';
 import { useToast } from '@/components/toast';
@@ -24,7 +24,6 @@ export default function CreateInvoicePage() {
   
   const [step, setStep] = useState(1);
   const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState('');
   
   // Form State
   const [clientName, setClientName] = useState('');
@@ -73,7 +72,6 @@ export default function CreateInvoicePage() {
   const handleSubmit = async () => {
     if (!user) return;
     setSubmitting(true);
-    setError('');
     
     try {
       const invoiceData: Partial<Invoice> = {
@@ -113,7 +111,7 @@ export default function CreateInvoicePage() {
       showToast('Invoice created successfully!', 'success');
       navigate(`/invoices/${created.id}`);
     } catch (err: any) {
-      setError(err.message || 'Failed to create invoice');
+      showToast(err.message || 'Failed to create invoice', 'error');
       setSubmitting(false);
     }
   };
@@ -353,12 +351,7 @@ export default function CreateInvoicePage() {
               </div>
             </div>
 
-            {error && (
-              <div className="bg-red-50 text-red-600 p-3 rounded-xl flex items-center gap-2 text-sm border border-red-100">
-                <AlertCircle className="w-4 h-4 shrink-0" />
-                {error}
-              </div>
-            )}
+
             
             <div className="flex justify-between pt-4">
               <button 
