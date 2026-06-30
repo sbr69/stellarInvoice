@@ -51,7 +51,7 @@ export default function SettingsPage() {
   return (
     <AuthGuard>
       <div className="max-w-2xl mx-auto space-y-6">
-        <h1 className="text-2xl font-bold tracking-tight text-gray-900 mb-8">Settings</h1>
+        <h1 className="text-4xl font-bold tracking-tight text-gray-900 mb-8">Settings</h1>
 
         <div className="bg-white p-6 sm:p-8 rounded-3xl border border-gray-200 shadow-sm space-y-8">
           

@@ -46,15 +46,6 @@ export function Sidebar() {
         })}
       </nav>
 
-      <div className="p-4 border-t border-gray-100">
-        <div className="bg-gray-50 rounded-xl p-4 text-center border border-gray-200">
-          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Network</p>
-          <div className="inline-flex items-center gap-2 bg-white px-3 py-1 rounded-full border border-gray-200 text-xs font-medium text-gray-700 shadow-sm">
-            <div className="w-2 h-2 rounded-full bg-teal-400"></div>
-            Stellar Testnet
-          </div>
-        </div>
-      </div>
     </aside>
   );
 }

@@ -44,16 +44,12 @@ export function Header() {
             <div className="flex items-center gap-3">
               {isConnected ? (
                 <>
-                  {/* Network badge */}
-                  <span className="hidden sm:inline-flex items-center gap-1 px-2 py-1 text-[10px] font-medium rounded-full bg-teal-50 text-teal-700 border border-teal-100">
-                    <span className="w-1.5 h-1.5 rounded-full bg-teal-500"></span>
-                    {network || 'Testnet'}
-                  </span>
+
 
                   {/* Wallet address badge */}
-                  <div className="flex items-center gap-2 bg-gray-50 px-3 py-1.5 rounded-full border border-gray-100">
+                  <div className="hidden sm:flex items-center gap-2 bg-gray-50 px-3 py-1.5 rounded-full border border-gray-100">
                     <div className="w-2 h-2 rounded-full bg-teal-400"></div>
-                    <span className="text-xs font-mono text-gray-600 font-medium hidden sm:inline-block">
+                    <span className="text-xs font-mono text-gray-600 font-medium">
                       {truncateAddress(walletAddress || '', 4)}
                     </span>
                   </div>

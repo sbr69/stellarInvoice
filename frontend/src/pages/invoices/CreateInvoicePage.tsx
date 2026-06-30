@@ -6,7 +6,7 @@ import { db } from '@/lib/api-client';
 import { Invoice, InvoiceItem } from '@/lib/types';
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { ArrowLeft, ArrowRight, CheckCircle2, Trash2, Plus } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Trash2, Plus, CheckCircle2 } from 'lucide-react';
 import { formatXlmAmount, stroopsToXlmString, xlmToStroops } from '@/lib/stellar';
 import { createInvoiceOnChain, isContractConfigured } from '@/lib/soroban-client';
 import { useToast } from '@/components/toast';
@@ -30,7 +30,13 @@ export default function CreateInvoicePage() {
   const [clientEmail, setClientEmail] = useState('');
   const [items, setItems] = useState<InvoiceFormItem[]>([{ description: '', quantity: '1', unit_price: '0' }]);
   const [recipientWallet, setRecipientWallet] = useState(walletAddress || '');
-  const [dueDate, setDueDate] = useState('');
+  const [dueDate, setDueDate] = useState(() => {
+    const d = new Date();
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  });
 
   useEffect(() => {
     if (walletAddress && !recipientWallet) {
@@ -267,13 +273,14 @@ export default function CreateInvoicePage() {
                 <p className="text-xs text-gray-500 mt-1">Pre-filled with your connected wallet.</p>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Due Date (Optional)</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Due Date *</label>
                 <input 
-                  type="date" 
-                  value={dueDate}
-                  onChange={(e) => setDueDate(e.target.value)}
-                  className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-500 focus:bg-white transition-all"
+                  type="text" 
+                  readOnly
+                  value={new Date(dueDate + 'T00:00:00').toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+                  className="w-full px-4 py-2 bg-gray-100 border border-gray-200 rounded-xl cursor-not-allowed text-gray-600 font-medium text-sm"
                 />
+                <p className="text-xs text-gray-500 mt-1">Payment is due immediately (today).</p>
               </div>
             </div>
             
@@ -342,12 +349,10 @@ export default function CreateInvoicePage() {
                   <span className="text-gray-500">Destination</span>
                   <span className="font-mono text-gray-900 text-xs break-all text-right max-w-[60%]">{recipientWallet}</span>
                 </div>
-                {dueDate && (
-                  <div className="flex justify-between text-sm">
-                    <span className="text-gray-500">Due Date</span>
-                    <span className="text-gray-900">{new Date(dueDate).toLocaleDateString()}</span>
-                  </div>
-                )}
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-500">Due Date</span>
+                  <span className="text-gray-900">{new Date(dueDate + 'T00:00:00').toLocaleDateString()}</span>
+                </div>
               </div>
             </div>
 
@@ -382,21 +387,21 @@ export default function CreateInvoicePage() {
         </Link>
         
         {/* Progress */}
-        <div className="flex items-center mb-8 relative">
-          <div className="absolute left-0 top-1/2 -translate-y-1/2 w-full h-1 bg-gray-100 rounded-full -z-10"></div>
+        <div className="flex items-center mb-8 relative z-0">
+          <div className="absolute left-[12.5%] top-1/2 -translate-y-1/2 w-[75%] h-1 bg-gray-100 rounded-full -z-10"></div>
           <div 
-            className="absolute left-0 top-1/2 -translate-y-1/2 h-1 bg-violet-500 rounded-full -z-10 transition-all duration-300"
-            style={{ width: `${((step - 1) / 3) * 100}%` }}
+            className="absolute left-[12.5%] top-1/2 -translate-y-1/2 h-1 bg-blue-600 rounded-full -z-10 transition-all duration-300"
+            style={{ width: `${((step - 1) / 3) * 75}%` }}
           ></div>
           
           {[1, 2, 3, 4].map(s => (
             <div key={s} className="flex-1 flex justify-center">
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold border-2 transition-colors ${
-                step === s ? 'bg-white border-violet-500 text-violet-600' :
-                step > s ? 'bg-violet-500 border-violet-500 text-white' :
+              <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold border-2 transition-colors relative z-10 ${
+                step === s ? 'bg-white border-blue-600 text-blue-600' :
+                step > s ? 'bg-blue-600 border-blue-600 text-white' :
                 'bg-white border-gray-200 text-gray-400'
               }`}>
-                {step > s ? <CheckCircle2 className="w-5 h-5" /> : s}
+                {s}
               </div>
             </div>
           ))}

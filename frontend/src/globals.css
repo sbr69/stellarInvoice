@@ -7,7 +7,19 @@
   -ms-overflow-style: none !important;
 }
 
+
 .stellar-wallets-kit section::-webkit-scrollbar {
   display: none !important;
+}
+
+/* Hide number input spinner arrows globally */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
 }
 

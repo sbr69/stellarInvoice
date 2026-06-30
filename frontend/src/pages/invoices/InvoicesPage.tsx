@@ -5,22 +5,21 @@ import { useWallet } from '@/lib/wallet-context';
 import { db } from '@/lib/api-client';
 import { Invoice } from '@/lib/types';
 import { useEffect, useState, useCallback } from 'react';
-import { Link } from 'react-router-dom';
-import { Search, MoreVertical, Copy, Eye, XCircle, Plus, FileText } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Search, Copy, Plus, FileText, ChevronDown } from 'lucide-react';
 import { format } from 'date-fns';
-import { cancelInvoiceOnChain, isContractConfigured } from '@/lib/soroban-client';
 import { useToast } from '@/components/toast';
 import { SkeletonTableRow } from '@/components/skeleton';
 
 export default function InvoicesPage() {
-  const { user, walletAddress, signTransaction } = useWallet();
+  const { user } = useWallet();
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('All');
   const [search, setSearch] = useState('');
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const navigate = useNavigate();
   
-  // State for active dropdown menu
-  const [openMenuId, setOpenMenuId] = useState<string | null>(null);
   const { showToast } = useToast();
 
   const loadInvoices = useCallback(async () => {
@@ -36,28 +35,6 @@ export default function InvoicesPage() {
       loadInvoices();
     }
   }, [user, loadInvoices]);
-
-  // (loadInvoices moved above)
-
-  const handleCancel = async (id: string) => {
-    try {
-      await db.updateInvoiceStatus(id, 'Cancelled');
-
-      if (isContractConfigured() && walletAddress) {
-        try {
-          await cancelInvoiceOnChain(walletAddress, id, signTransaction);
-        } catch (contractErr) {
-          console.error('On-chain cancellation failed:', contractErr);
-        }
-      }
-
-      showToast('Invoice cancelled', 'success');
-      await loadInvoices();
-    } catch (e) {
-      console.error(e);
-      showToast('Failed to cancel invoice', 'error');
-    }
-  };
 
   const copyLink = (id: string) => {
     const url = `${window.location.origin}/pay/${id}`;
@@ -86,7 +63,7 @@ export default function InvoicesPage() {
     <AuthGuard>
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <h1 className="text-2xl font-bold tracking-tight text-gray-900">Invoices</h1>
+          <h1 className="text-4xl font-bold tracking-tight text-gray-900">Invoices</h1>
           <Link 
             to="/invoices/create"
             className="inline-flex items-center justify-center gap-2 bg-gray-900 hover:bg-gray-800 text-white px-5 py-2.5 rounded-xl font-medium transition-all shadow-sm shrink-0"
@@ -98,30 +75,81 @@ export default function InvoicesPage() {
 
         <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden flex flex-col">
           {/* Controls */}
-          <div className="p-4 border-b border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div className="flex items-center gap-1 bg-gray-100 p-1 rounded-xl shrink-0 overflow-x-auto no-scrollbar">
-              {['All', 'Pending', 'Paid', 'Expired', 'Cancelled'].map(f => (
+          <div className="p-4 border-b border-gray-100">
+            {/* Mobile View: Dropdown left, Search right */}
+            <div className="flex sm:hidden items-center gap-2 w-full">
+              <div className="relative w-32 shrink-0">
                 <button
-                  key={f}
-                  onClick={() => setFilter(f)}
-                  className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${
-                    filter === f ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-900'
-                  }`}
+                  onClick={() => setIsFilterOpen(!isFilterOpen)}
+                  className="w-full flex items-center justify-between bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-100/50 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:bg-white transition-all text-left shadow-sm"
                 >
-                  {f}
+                  <span className="truncate">{filter}</span>
+                  <ChevronDown className={`w-4 h-4 text-gray-500 transition-transform shrink-0 ml-1 ${isFilterOpen ? 'rotate-180' : ''}`} />
                 </button>
-              ))}
+                
+                {isFilterOpen && (
+                  <>
+                    <div className="fixed inset-0 z-10" onClick={() => setIsFilterOpen(false)}></div>
+                    <div className="absolute left-0 mt-1.5 w-full bg-white border border-gray-100 shadow-xl rounded-xl py-1 z-20 overflow-hidden animate-in fade-in slide-in-from-top-1 duration-100">
+                      {['All', 'Pending', 'Paid', 'Expired', 'Cancelled'].map(f => (
+                        <button
+                          key={f}
+                          onClick={() => {
+                            setFilter(f);
+                            setIsFilterOpen(false);
+                          }}
+                          className={`w-full text-left px-4 py-2 text-sm font-semibold transition-colors ${
+                            filter === f 
+                              ? 'bg-violet-50 text-violet-700' 
+                              : 'text-gray-700 hover:bg-gray-50'
+                          }`}
+                        >
+                          {f}
+                        </button>
+                      ))}
+                    </div>
+                  </>
+                )}
+              </div>
+              
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <input 
+                  type="text" 
+                  placeholder="Search..." 
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  className="w-full pl-9 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-500 focus:bg-white transition-all text-sm"
+                />
+              </div>
             </div>
-            
-            <div className="relative w-full sm:max-w-xs">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-              <input 
-                type="text" 
-                placeholder="Search invoices..." 
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="w-full pl-9 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-500 focus:bg-white transition-all text-sm"
-              />
+
+            {/* Desktop View */}
+            <div className="hidden sm:flex flex-row items-center justify-between w-full gap-4">
+              <div className="flex items-center gap-1 bg-gray-100 p-1 rounded-xl shrink-0 overflow-x-auto no-scrollbar">
+                {['All', 'Pending', 'Paid', 'Expired', 'Cancelled'].map(f => (
+                  <button
+                    key={f}
+                    onClick={() => setFilter(f)}
+                    className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${
+                      filter === f ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-900'
+                    }`}
+                  >
+                    {f}
+                  </button>
+                ))}
+              </div>
+              
+              <div className="relative w-full max-w-xs">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <input 
+                  type="text" 
+                  placeholder="Search invoices..." 
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  className="w-full pl-9 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-500 focus:bg-white transition-all text-sm"
+                />
+              </div>
             </div>
           </div>
 
@@ -139,7 +167,7 @@ export default function InvoicesPage() {
           ) : (
             <>
               {/* Desktop Table View */}
-              <div className="hidden md:block overflow-x-auto pb-32">
+              <div className="hidden md:block overflow-x-auto">
                 <table className="w-full text-left border-collapse">
                   <thead>
                     <tr className="bg-gray-50 border-b border-gray-100">
@@ -153,11 +181,15 @@ export default function InvoicesPage() {
                   </thead>
                   <tbody className="divide-y divide-gray-100">
                     {filteredInvoices.map(inv => (
-                      <tr key={inv.id} className="hover:bg-gray-50 transition-colors">
+                      <tr 
+                        key={inv.id} 
+                        onClick={() => navigate(`/invoices/${inv.id}`)}
+                        className="hover:bg-gray-50 transition-colors cursor-pointer group"
+                      >
                         <td className="py-4 px-6">
-                          <Link to={`/invoices/${inv.id}`} className="font-medium text-gray-900 hover:text-violet-600 transition-colors">
+                          <span className="font-medium text-gray-900 group-hover:text-violet-600 transition-colors">
                             {inv.invoice_number}
-                          </Link>
+                          </span>
                         </td>
                         <td className="py-4 px-6 text-gray-600">
                           <div>{inv.client_name}</div>
@@ -172,41 +204,16 @@ export default function InvoicesPage() {
                         <td className="py-4 px-6 text-gray-500 text-sm">
                           {format(new Date(inv.created_at), 'MMM d, yyyy')}
                         </td>
-                        <td className="py-4 px-6 text-right relative">
-                          <button 
-                            onClick={() => setOpenMenuId(openMenuId === inv.id ? null : inv.id)}
-                            className="p-2 text-gray-400 hover:text-gray-900 rounded-full hover:bg-gray-100 transition-colors"
-                          >
-                            <MoreVertical className="w-5 h-5" />
-                          </button>
-                          
-                          {openMenuId === inv.id && (
-                            <>
-                              <div className="fixed inset-0 z-10" onClick={() => setOpenMenuId(null)}></div>
-                              <div className="absolute right-6 top-12 w-48 bg-white border border-gray-100 shadow-xl rounded-xl py-1.5 z-20 overflow-hidden">
-                                <Link 
-                                  to={`/invoices/${inv.id}`}
-                                  className="w-full flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
-                                >
-                                  <Eye className="w-4 h-4 text-gray-400" /> View Details
-                                </Link>
-                                <button 
-                                  onClick={() => { copyLink(inv.id); setOpenMenuId(null); }}
-                                  className="w-full flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
-                                >
-                                  <Copy className="w-4 h-4 text-gray-400" /> Copy Link
-                                </button>
-                                {inv.status === 'Pending' && (
-                                  <button 
-                                    onClick={() => { handleCancel(inv.id); setOpenMenuId(null); }}
-                                    className="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50"
-                                  >
-                                    <XCircle className="w-4 h-4 text-red-400" /> Cancel Invoice
-                                  </button>
-                                )}
-                              </div>
-                            </>
-                          )}
+                        <td className="py-4 px-6 text-right">
+                          <div className="flex items-center justify-end gap-1.5">
+                            <button 
+                              onClick={(e) => { e.stopPropagation(); copyLink(inv.id); }}
+                              className="p-1.5 text-gray-400 hover:text-violet-600 hover:bg-violet-50 rounded-lg transition-all"
+                              title="Copy Share Link"
+                            >
+                              <Copy className="w-4 h-4" />
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     ))}
@@ -217,11 +224,15 @@ export default function InvoicesPage() {
               {/* Mobile Card List View */}
               <div className="md:hidden divide-y divide-gray-100">
                 {filteredInvoices.map(inv => (
-                  <div key={inv.id} className="p-4 space-y-3 hover:bg-gray-50 transition-colors">
+                  <div 
+                    key={inv.id} 
+                    onClick={() => navigate(`/invoices/${inv.id}`)}
+                    className="p-4 space-y-3 hover:bg-gray-50 transition-colors cursor-pointer group"
+                  >
                     <div className="flex items-center justify-between">
-                      <Link to={`/invoices/${inv.id}`} className="font-semibold text-gray-900 hover:text-violet-600 transition-colors">
+                      <span className="font-semibold text-gray-900 group-hover:text-violet-600 transition-colors">
                         {inv.invoice_number}
-                      </Link>
+                      </span>
                       <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium border ${getStatusColor(inv.status)}`}>
                         {inv.status}
                       </span>
@@ -241,29 +252,13 @@ export default function InvoicesPage() {
                       </span>
                       
                       <div className="flex items-center gap-1">
-                        <Link 
-                          to={`/invoices/${inv.id}`}
-                          className="p-2 text-gray-500 hover:text-violet-600 hover:bg-violet-50 rounded-lg transition-all"
-                          title="View Details"
-                        >
-                          <Eye className="w-4.5 h-4.5" />
-                        </Link>
                         <button 
-                          onClick={() => copyLink(inv.id)}
+                          onClick={(e) => { e.stopPropagation(); copyLink(inv.id); }}
                           className="p-2 text-gray-500 hover:text-violet-600 hover:bg-violet-50 rounded-lg transition-all"
                           title="Copy Share Link"
                         >
-                          <Copy className="w-4.5 h-4.5" />
+                          <Copy className="w-4 h-4" />
                         </button>
-                        {inv.status === 'Pending' && (
-                          <button 
-                            onClick={() => handleCancel(inv.id)}
-                            className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-all"
-                            title="Cancel Invoice"
-                          >
-                            <XCircle className="w-4.5 h-4.5" />
-                          </button>
-                        )}
                       </div>
                     </div>
                   </div>
