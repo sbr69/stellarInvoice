@@ -17,8 +17,8 @@ export function Sidebar() {
     <aside className="w-64 bg-white border-r border-gray-100 hidden md:flex flex-col h-screen sticky top-0 shrink-0">
       <div className="p-6">
         <Link to="/dashboard" className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-violet-500 to-teal-400 flex items-center justify-center shadow-sm">
-            <span className="text-white font-bold text-lg leading-none">I</span>
+          <div className="w-8 h-8 flex items-center justify-center">
+            <img src="/logo.png" alt="InvoiceChain Logo" className="w-full h-full object-contain" />
           </div>
           <span className="font-semibold text-xl tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600">
             InvoiceChain
